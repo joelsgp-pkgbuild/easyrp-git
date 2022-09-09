@@ -12,7 +12,7 @@ optdepends=()
 provides=('easyrp')
 conflicts=('easyrp' 'easyrp-bin')
 source=("${pkgname%-git}::git+https://github.com/Pizzabelly/EasyRP.git"
-        'git+https://github.com/discord/discord-rpc.git')
+        'git+https://github.com/discord/discord-rpc.git#commit=7c41a8e')
 sha256sums=('SKIP'
             'SKIP')
 
@@ -37,11 +37,13 @@ build() {
   cd "${pkgname%-git}"
 
   cd $_sub
-  cmake -B build -S . -DENABLE_IO_THREAD=OFF
+  mkdir -p build
   cd build
+  cmake .. -DENABLE_IO_THREAD=OFF
   make
 
-  cd ../..
+  cd "${srcdir}"
+  cd "${pkgname%-git}"
   meson --buildtype=release build
   ninja -C build
 }
